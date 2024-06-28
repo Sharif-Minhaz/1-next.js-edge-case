@@ -1,36 +1,39 @@
 "use client";
 
-import { loginWithCredentials } from "@/actions/auth";
-import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { FormEvent } from "react";
 
-export default function LoginForm() {
+import { useRouter } from "next/navigation";
+
+export default function RegistrationForm() {
 	const router = useRouter();
-	const [error, setError] = useState("");
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
 		try {
 			const formData = new FormData(e.currentTarget);
+			const name = formData.get("name");
+			const email = formData.get("email");
+			const password = formData.get("password");
 
-			const response = await loginWithCredentials(formData);
+			const response = await fetch("/api/register", {
+				method: "POST",
+				headers: { "content-type": "application/json" },
+				body: JSON.stringify({ name, email, password }),
+			});
 
-			if (response.error) {
-				setError(response.error?.message);
-			} else {
-				router.push("/home");
+			if (response.status === 201) {
+				router.push("/");
 			}
 		} catch (error) {
 			console.error(error);
-			setError("Check your credentials");
 		}
 	};
 
 	return (
 		<form className="mt-4 w-full" onSubmit={handleSubmit}>
-			{error && <div className="text-red-500 text-center">{error}</div>}
-			{/* <div className="flex flex-col">
+			{/* {error && <div className="text-red-500 text-center">{error}</div>} */}
+			<div className="flex flex-col">
 				<label className="mb-1.5" htmlFor="name">
 					Full name
 				</label>
@@ -39,7 +42,7 @@ export default function LoginForm() {
 					name="name"
 					id="name"
 				/>
-			</div> */}
+			</div>
 			<div className="flex flex-col">
 				<label className="mb-1.5" htmlFor="email">
 					Email address
@@ -69,7 +72,7 @@ export default function LoginForm() {
 					type="submit"
 					className="text-white bg-green-500 px-4 py-2.5 rounded-md active:scale-95 transition-all"
 				>
-					Credential Login
+					Register
 				</button>
 			</div>
 		</form>

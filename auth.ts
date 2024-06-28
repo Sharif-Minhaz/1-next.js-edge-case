@@ -2,7 +2,8 @@ import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
 import Github from "next-auth/providers/github";
 import Credentials from "next-auth/providers/credentials";
-import { getUserByEmail } from "./data/user";
+import User, { IUser } from "./lib/models/User.model";
+import bcrypt from "bcryptjs";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
 	session: { strategy: "jwt" },
@@ -34,17 +35,23 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 			async authorize(credentials) {
 				if (credentials === null) return null;
 				try {
-					const user = getUserByEmail(credentials?.email as string);
+					const user: IUser | null = await User.findOne({
+						email: credentials?.email as string,
+					}).lean();
 
 					if (user) {
-						const isMatch = credentials?.password === user.password;
+						const isMatch = await bcrypt.compare(
+							credentials?.password as string,
+							user.password
+						);
+
 						if (isMatch) {
 							return user;
 						} else {
 							new Error("Wrong credentials");
 						}
 					} else {
-						new Error("User not found");
+						new Error("Wrong credentials");
 					}
 				} catch (error) {
 					console.error(error);

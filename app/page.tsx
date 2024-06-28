@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import SocialLogin from "../components/SocialLogin";
 import { redirect } from "next/navigation";
 import LoginForm from "@/components/LoginForm";
+import Link from "next/link";
 
 export default async function Home() {
 	const session = await auth();
@@ -9,11 +10,17 @@ export default async function Home() {
 	if (session?.user) return redirect("/home");
 
 	return (
-		<main className="flex items-center flex-col justify-center mt-4">
-			<h2 className="text-center text-2xl">Hey time to sign in</h2>
+		<main className="flex items-center flex-col mx-auto justify-center mt-4 w-[346px]">
+			<h2 className="text-center text-2xl mb-3">Hey, time to sign in</h2>
 			<LoginForm />
-			<div className="border-b border-gray-200 w-[335px] mt-5" />
+			<div className="border-b border-gray-200 w-full mt-5" />
 			<SocialLogin />
+			<p className="text-center text-sm mt-4">
+				Don&apos;t have any account?{" "}
+				<Link href="/register" className="hover:underline text-blue-400">
+					Register now.
+				</Link>
+			</p>
 		</main>
 	);
 }
