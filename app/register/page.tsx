@@ -11,7 +11,7 @@ export default function RegisterPage() {
 			<SocialLogin />
 			<p className="text-center text-sm mt-4">
 				Already have an account?{" "}
-				<Link href="/" className="hover:underline text-blue-400">
+				<Link href="/login" className="hover:underline text-blue-400">
 					Login now.
 				</Link>
 			</p>

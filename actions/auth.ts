@@ -5,11 +5,11 @@ import { signIn, signOut } from "@/auth";
 export async function loginWithSocial(formData: FormData) {
 	const action = formData.get("action");
 
-	await signIn(action as string, { redirectTo: "/home" });
+	await signIn(action as string, { redirectTo: "/products" });
 }
 
 export async function logout() {
-	await signOut({ redirectTo: "/" });
+	await signOut();
 }
 
 export async function loginWithCredentials(formData: FormData) {

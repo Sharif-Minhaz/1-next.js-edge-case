@@ -16,10 +16,10 @@ export default function LoginForm() {
 
 			const response = await loginWithCredentials(formData);
 
-			if (response.error) {
+			if (!!response.error) {
 				setError(response.error?.message);
 			} else {
-				router.push("/home");
+				router.push("/products");
 			}
 		} catch (error) {
 			console.error(error);
@@ -30,16 +30,6 @@ export default function LoginForm() {
 	return (
 		<form className="mt-4 w-full" onSubmit={handleSubmit}>
 			{error && <div className="text-red-500 text-center">{error}</div>}
-			{/* <div className="flex flex-col">
-				<label className="mb-1.5" htmlFor="name">
-					Full name
-				</label>
-				<input
-					className="border border-gray-200 rounded px-2 py-2 mb-3"
-					name="name"
-					id="name"
-				/>
-			</div> */}
 			<div className="flex flex-col">
 				<label className="mb-1.5" htmlFor="email">
 					Email address
